@@ -7,30 +7,34 @@ import mongoose from 'mongoose';
 
 	db_uri: String,
 	data: Mixed,
-	callback: function
+	db_operacion: function (callback)
+
+	return: object
 */
-async function dbConnection(db_uri, data, callback) {
+async function dbConnection(db_uri, data, db_operacion) {
 	let response = {
-		origen: '',
-		contenido: [],
-		error: '',
+		origen: 'Check the origin...',
+		contenido: null,
+		error: null,
 	}
 
-	let datos_recibidos = null;
+	let datos_recibidos;
 
 	try {
 		await mongoose.connect(db_uri);
-		datos_recibidos = await callback(data);
-
-		response.origen = datos_recibidos.origen;
-		delete datos_recibidos.origen;
+		datos_recibidos = await db_operacion(data);
 
 		response.contenido = datos_recibidos.datos; 
 	} catch(error) {
 		response.error = error.message;
+	} finally {
+		response.origen = datos_recibidos.origen ?? response.origen;
 	}
 
 	return response;
 }
 
+/*
+	Exportación de la función
+*/
 export { dbConnection }
