@@ -1,49 +1,64 @@
 import express from 'express';
-import { getDocuments } from '../utils/db.operations.js'
-import { getOneDocument } from '../utils/db.operations.js'
-import { getManyDocuments } from '../utils/db.operations.js'
-import { createDocument } from '../utils/db.operations.js'
-import { deleteDocument } from '../utils/db.operations.js'
-import { updateDocument } from '../utils/db.operations.js'
-
-
-import { HiloModel } from '../models/hilos.model.js';
-
+import { HiloController } from '../controllers/hilos.controller.js';
 
 const route = express.Router();
 
+/*
+	Endpoint que permite traer todos los hilos que 
+	existen en la base de datos
+*/
 route.get('/', async (req, res) => {
-	let origen = req.protocol + "://" + req.get('host') + req.originalUrl;
-	let test = null;
-	//TODO Controlador de hilos para las operaciones
-	//test = await getDocuments(HiloModel, {origen}); // GetAll
-	//test = await getOneDocument(HiloModel, {origen, buscar: {tema: 'Jamon'}}); // Get one document, first
-	//test = await getManyDocuments(HiloModel, {origen, buscar: {tema: 'Programación'}}); // Get many documents
-	//test = await createDocument(HiloModel, {origen, crear: {tema: 'Jamon', descripcion: 'Este es el apartado de jamon'}}); // Create one element
-	//test = await deleteDocument(HiloModel, {origen, eliminar: {tema: 'Programación'}}); // delete one element
-	//test = await updateDocument(HiloModel, {origen, buscar:{tema: 'Noticias'}, cambiar:{descripcion: 'Cambiando una noticia'}}); // update one element
-	res.json(test ?? {});
+	const hiloController = new HiloController(req);
+	let hilo = await hiloController.getHilo(req.params);
+
+	res.json(hilo);
 });
 
-route.get('/tmp', async (req, res) => {
-	
-	let origen = req.protocol + "://" + req.get('host') + req.originalUrl;
+/*
+	Endpoint que permite realizar busquedas en los hilos
+	segun los criterios de busqueda pasados por la url
+	?parametro=valor&otro=valor
+*/
+route.get('/buscar', async (req, res) => {
+	const hiloController = new HiloController(req);
+	let hilo = await hiloController.getHilo({buscar: req.query});
 
-	// let crearHilo = await dbConnection(db, origen, async (data) => {
-	// 	const hilo = new HiloModel({
-	// 		tema: 'Programación',
-	// 		descripcion: 'Este es el apartado de programación',
-	// 	});
+	res.json(hilo);
+});
 
-	// 	await hilo.save();
+/*
+	Endpoint que permite crear un hilo
+	segun los datos enviados por el body (POST) 
+*/
+route.post('/crear', async (req, res) => {
+	const hiloController = new HiloController(req);
+	let hilo = await hiloController.createHilo(req.body);
 
-	// 	//const eliminarHilo = await HiloModel.deleteOne({ tema: 'Programación'});
-	// 	const encontrarHilo = await HiloModel.find();
+	res.json(hilo);
+});
 
-	// 	return {datos: hilo, origen: origen};
-	// });
+/*
+	Endpoint que permite eliminar un hilo
+	segun los criterios de eliminación
+	?parametro=valor&otro=valor
+*/
+route.get('/eliminar', async (req, res) => {
+	const hiloController = new HiloController(req);
+	let hilo = await hiloController.deleteHilo({eliminar: req.query});
 
-	res.json(test);
+	res.json(hilo);
+});
+
+/*
+	Endpoint que permite modificar un hilo
+	segun los criterios enviados por el body
+	de la peticion
+*/
+route.post('/modificar', async (req, res) => {
+	const hiloController = new HiloController(req);
+	let hilo = await hiloController.updateHilo(req.body);
+
+	res.json(hilo);
 });
 
 export default route;

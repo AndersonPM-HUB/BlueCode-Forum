@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { getTime } from './moment.utils.js';
 
 /*
 	Realiza la conexión con la base de datos, y
@@ -13,8 +14,10 @@ import mongoose from 'mongoose';
 */
 async function dbConnection(db_uri, data, db_operacion) {
 	let response = {
-		origen: 'Check the origin...',
+		fecha: getTime(), 
+		origen: 'Revise el origen...',
 		contenido: null,
+		total: 0,
 		error: null,
 	}
 
@@ -23,18 +26,35 @@ async function dbConnection(db_uri, data, db_operacion) {
 	try {
 		await mongoose.connect(db_uri);
 		datos_recibidos = await db_operacion(data);
+		response.origen = datos_recibidos.origen;
 
-		response.contenido = datos_recibidos.datos; 
+		response.contenido = datos_recibidos.datos ?? 'Contenido no encontrado...';
+		response.total = response.contenido != 'Contenido no encontrado...' ? 
+							response.contenido.length : response.total;
+							
 	} catch(error) {
+		response.contenido = 'Algo salio mal...';
 		response.error = error.message;
-	} finally {
-		response.origen = datos_recibidos.origen ?? response.origen;
 	}
 
 	return response;
 }
 
 /*
+	Retorna el formato de respuesta de la
+	base de datos
+*/
+function getResFormat() {
+	return {
+		fecha: getTime(), 
+		origen: 'Check the origin...',
+		contenido: 'Not content found',
+		total: 0,
+		error: null,
+	}
+}
+
+/*
 	Exportación de la función
 */
-export { dbConnection }
+export { dbConnection, getResFormat }

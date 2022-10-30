@@ -1,4 +1,5 @@
 import { dbConnection } from './db.connection.js';
+import { getTime } from './moment.utils.js';
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: './.env.development.local', enconding: 'latin1' });
@@ -134,10 +135,14 @@ async function updateDocument(Model, datos) {
 */
 function logOperation(Model, process, data){
 	console.log('='.repeat(85));
-	console.group('Input Database operation');
+	console.group('Database operation');
+	console.log(`Time: ${getTime()}`);
 	console.log(`Model: ${Model.collection.collectionName}`);
 	console.log(`Process: ${process}`);
 	console.log(`Data: ${JSON.stringify(data)}`);
+	console.group('Input data:');
+	console.table(data);
+	console.groupEnd('Datos');
 	console.groupEnd('Database');
 }
 
