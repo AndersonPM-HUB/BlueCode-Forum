@@ -8,6 +8,7 @@ import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
 
 import hilosRoutes from './routes/hilos.routes.js';
+import usuariosRoutes from './routes/usuarios.routes.js';
 
 dotenv.config({ path: './.env.development.local', enconding: 'latin1' });
 
@@ -17,13 +18,14 @@ const port = process.env.PORT;
 
 //Middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
+app.use(cookieParser(process.env.SECRET_KEY));
 app.use(session({
 	secret: process.env.SECRET_KEY,
 	name: process.env.SESSION_NAME,
 	cookie: {
 		httpOnly: true,
-		secure: true,
+		secure: false,
 		sameSite: false,
 	},
 	saveUninitialized: false,
@@ -35,10 +37,10 @@ app.use(session({
 		autoRemove: 'native'
 	}),
 }));
-app.use(cookieParser());
 
 // Rutas de la aplicación
 app.use('/hilos', hilosRoutes);
+app.use('/usuarios', usuariosRoutes);
 
 // test session
 app.get('/', async (req, res) => {
@@ -50,10 +52,15 @@ app.get('/', async (req, res) => {
 
 	//TODO Regenerar session despues de un login
 	//TODO Destruir session cuando se salga de la session
-	console.log(req.cookies)
-	console.log('Signed Cookies: ', req.signedCookies)
+	
+	//console.log(req.cookies)
+	//console.log('Signed Cookies: ', req.signedCookies)
+	
 	//console.log(req.sessionID);
-	res.json(req.session);
+	let session_id = req.sessionID;
+	let session_params = req.session;
+
+	res.json({session_id, session_params});
 })
 
 // Inicio de la aplicación

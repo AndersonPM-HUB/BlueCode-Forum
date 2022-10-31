@@ -55,6 +55,17 @@ function getResFormat() {
 }
 
 /*
+	Avisa al usuario en caso de alguna alerta
+*/
+function alertaRes(origen, message) {
+	let dataSchema = getResFormat();
+	dataSchema.origen = origen;
+	dataSchema.contenido = message;
+
+	return dataSchema;
+}
+
+/*
 	Exportación de la función
 */
-export { dbConnection, getResFormat }
+export { dbConnection, getResFormat, alertaRes }

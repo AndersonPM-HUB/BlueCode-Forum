@@ -1,5 +1,6 @@
 import * as DbOperation from '../utils/db.operations.js';
 import { getResFormat } from '../utils/db.connection.js';
+import { alertaRes } from '../utils/db.connection.js';
 import { HiloModel } from '../models/hilos.model.js';
 
 /*
@@ -45,12 +46,8 @@ class HiloController {
 			dataSchema.crear = data;
 			return await DbOperation.createDocument(this.model, dataSchema);
 		}
-
-		documentExist = getResFormat();
-		documentExist.origen = origen;
-		documentExist.contenido = 'El hilo ya existe...';
 		
-		return documentExist;
+		return alertaRes(origen, 'El hilo ya existe...');
 	}
 
 	/*
@@ -67,10 +64,15 @@ class HiloController {
 		let dataSchema = {
 			origen,
 		}
+		let operationDb = null;
 
-		let operationDb = DbOperation.getDocuments;
+		if (!data.buscar) {
+			operationDb = DbOperation.getDocuments;
 
-		if (data.buscar) {
+			return await operationDb(this.model, dataSchema);
+		}
+
+		if (data.buscar.tema) {
 			dataSchema.buscar = data.buscar;
 			operationDb = DbOperation.getOneDocument;
 			
@@ -78,14 +80,18 @@ class HiloController {
 				operationDb = DbOperation.getManyDocuments;
 				delete data.buscar.todos;
 			}
+
+		}
+
+		if (operationDb === null) {
+			return alertaRes(origen, 'Los criterios de busqueda no son válidos...');
 		}
 
 		return await operationDb(this.model, dataSchema);
 	}
 
 	/*
-		Elimina el hilo que se le envía por parametro,
-		segun lo que se le envíe por parametro
+		Elimina el hilo que se le envía por parametro
 
 		data: Objecto javascript
 
@@ -97,9 +103,12 @@ class HiloController {
 			origen, 
 		}
 
-		dataSchema.eliminar = data.eliminar;
-
-		return await DbOperation.deleteDocument(this.model, dataSchema);
+		if(data.eliminar.tema) {
+			dataSchema.eliminar = data.eliminar;
+			return await DbOperation.deleteDocument(this.model, dataSchema);
+		}
+		
+		return alertaRes(origen, 'Ingrese un tema para eliminar...');
 	}
 
 	/*
@@ -119,6 +128,7 @@ class HiloController {
 
 		return await DbOperation.updateDocument(this.model, dataSchema);
 	}
+	
 }
 
 export { HiloController }

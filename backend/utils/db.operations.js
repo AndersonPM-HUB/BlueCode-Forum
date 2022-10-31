@@ -140,9 +140,6 @@ function logOperation(Model, process, data){
 	console.log(`Model: ${Model.collection.collectionName}`);
 	console.log(`Process: ${process}`);
 	console.log(`Data: ${JSON.stringify(data)}`);
-	console.group('Input data:');
-	console.table(data);
-	console.groupEnd('Datos');
 	console.groupEnd('Database');
 }
 
