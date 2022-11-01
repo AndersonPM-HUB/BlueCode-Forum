@@ -25,16 +25,18 @@ app.use(session({
 	name: process.env.SESSION_NAME,
 	cookie: {
 		httpOnly: true,
+		maxAge: 24 * 60 * 60 * 1000,
 		secure: false,
 		sameSite: false,
 	},
-	saveUninitialized: false,
-	resave: true,
+	saveUninitialized: true,
+	resave: false,
 	store: MongoStore.create({
 		mongoUrl: process.env.DB_URI,
 		touchAfter: 24 * 3600,
 		ttl: 14 * 24 * 60 * 60,
-		autoRemove: 'native'
+		autoRemove: 'native',
+		autoRemoveInterval: 60 * 24
 	}),
 }));
 
@@ -55,8 +57,8 @@ app.get('/', async (req, res) => {
 	
 	//console.log(req.cookies)
 	//console.log('Signed Cookies: ', req.signedCookies)
-	
-	//console.log(req.sessionID);
+	console.log(req.session.id);
+	console.log(req.sessionID);
 	let session_id = req.sessionID;
 	let session_params = req.session;
 

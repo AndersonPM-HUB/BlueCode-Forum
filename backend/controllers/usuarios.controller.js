@@ -105,6 +105,61 @@ class UsuarioController {
 		return await DbOperation.updateDocument(this.model, dataSchema);
 	}
 
+	/*
+		Busca al usuario segun su email, si lo encuentra confirma la
+		contraseña y procede a asignarle la session en la base de datos 
+	
+		req: Objeto request (peticíon) javascript
+		data: Objecto javascript
+
+		return Objecto javascript
+	*/
+	async ingresarUsuario(req, data) {
+		let origen = this.origen;
+		let dataSchema = {
+			origen,
+			buscar: {email: data.email}
+		}
+
+		let usuario = await DbOperation.getOneDocument(this.model, dataSchema);
+		
+		usuario = usuario.contenido;
+		
+		if (usuario === 'Contenido no encontrado...'){
+			return alertaRes(origen, 'El usuario no se encuentra registrado...', 400);
+		}
+
+		let contraseña_valida = await encrypt.compareData(data.contraseña, usuario.contraseña);		
+
+		if (contraseña_valida && (data.email === usuario.email)) {
+			dataSchema.buscar._id = usuario._id;
+			dataSchema.cambiar= {session: req.sessionID, activo: true};
+
+			req.session.usuario = usuario;
+
+			return await DbOperation.updateDocument(this.model, dataSchema);
+		}
+
+		return alertaRes(origen, 'Las credenciales son incorrectas...', 400);
+	}
+
+	/*
+		Elimina la sesion si un usuario existe
+
+		req: Objeto request (peticíon) javascript
+		return Objecto javascript
+	*/
+	async salirUsuario(req) {
+		let origen = this.origen;
+		if (req.session.usuario){
+			await req.session.destroy();
+
+			return alertaRes(origen, 'Has cerrado sesión...', 200);
+		}
+
+		return alertaRes(origen, 'No es posible cerrar sesión', 400);
+	}
+
 }
 
 export { UsuarioController }
