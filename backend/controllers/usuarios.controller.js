@@ -63,11 +63,11 @@ class UsuarioController {
 			return await DbOperation.createDocument(this.model, dataSchema);
 		}
 
-		return alertaRes(origen, 'El usuario ya se encuentra registrado...');
+		return alertaRes(origen, 'El usuario ya se encuentra registrado...', 400);
 	}
 
 	/*
-		Elimina el usuario que se le envía por parametro
+		Elimina el usuario por _id que se le envía como argumento
 
 		data: Objecto javascript
 
@@ -84,11 +84,11 @@ class UsuarioController {
 			return await DbOperation.deleteDocument(this.model, dataSchema);
 		}
 		
-		return alertaRes(origen, 'Ingrese el id de un usuario para eliminar...');
+		return alertaRes(origen, 'Ingrese el id de un usuario para eliminar...', 400);
 	}
 
 	/*
-		Actualiza un usuario segun lo que se le envia por
+		Actualiza un usuario segun lo argumentos que se le envian por
 		parametros 
 
 		data: Objecto javascript

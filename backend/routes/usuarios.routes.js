@@ -11,6 +11,7 @@ route.get('/', async (req, res) => {
 	const usuarioController = new UsuarioController(req);
 	let usuario = await usuarioController.getUsuarios(req.params);
 
+	res.status = usuario.status;
 	res.json(usuario);
 });
 
@@ -23,6 +24,7 @@ route.post('/registrar', async (req, res) => {
 	const usuarioController = new UsuarioController(req);
 	let usuario = await usuarioController.registrarUsuario(req.body);
 
+	res.status = usuario.status;
 	res.json(usuario);
 });
 
@@ -31,10 +33,11 @@ route.post('/registrar', async (req, res) => {
 	segun los criterios de eliminación
 	?parametro=valor&otro=valor
 */
-route.get('/eliminar', async (req, res) => {
+route.post('/eliminar', async (req, res) => {
 	const usuarioController = new UsuarioController(req);
-	let usuario = await usuarioController.deleteUsuario({eliminar: req.query});
+	let usuario = await usuarioController.deleteUsuario(req.body);
 
+	res.status = usuario.status;
 	res.json(usuario);
 });
 
@@ -47,6 +50,7 @@ route.post('/modificar', async (req, res) => {
 	const usuarioController = new UsuarioController(req);
 	let usuario = await usuarioController.updateUsuario(req.body);
 
+	res.status = usuario.status;
 	res.json(usuario);
 });
 

@@ -18,6 +18,7 @@ async function dbConnection(db_uri, data, db_operacion) {
 		origen: 'Revise el origen...',
 		contenido: null,
 		total: 0,
+		status: 200,
 		error: null,
 	}
 
@@ -35,6 +36,7 @@ async function dbConnection(db_uri, data, db_operacion) {
 	} catch(error) {
 		response.contenido = 'Algo salio mal...';
 		response.error = error.message;
+		response.status = 400;
 	}
 
 	return response;
@@ -47,20 +49,27 @@ async function dbConnection(db_uri, data, db_operacion) {
 function getResFormat() {
 	return {
 		fecha: getTime(), 
-		origen: 'Check the origin...',
+		origen: 'Revise el origen...',
 		contenido: 'Not content found',
 		total: 0,
+		status: 200,
 		error: null,
 	}
 }
 
 /*
 	Avisa al usuario en caso de alguna alerta
+
+	origen: String de donde proviene la peticion
+	message: String Mensaje de alerta
+
+	return Objecto javascript con la alerta y el formato de respuesta
 */
-function alertaRes(origen, message) {
+function alertaRes(origen, message, status) {
 	let dataSchema = getResFormat();
 	dataSchema.origen = origen;
 	dataSchema.contenido = message;
+	dataSchema.status = status;
 
 	return dataSchema;
 }

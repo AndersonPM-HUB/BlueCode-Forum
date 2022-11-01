@@ -11,6 +11,7 @@ route.get('/', async (req, res) => {
 	const hiloController = new HiloController(req);
 	let hilo = await hiloController.getHilo(req.params);
 
+	res.status = hilo.status;
 	res.json(hilo);
 });
 
@@ -23,6 +24,7 @@ route.get('/buscar', async (req, res) => {
 	const hiloController = new HiloController(req);
 	let hilo = await hiloController.getHilo({buscar: req.query});
 
+	res.status = hilo.status;
 	res.json(hilo);
 });
 
@@ -34,6 +36,7 @@ route.post('/crear', async (req, res) => {
 	const hiloController = new HiloController(req);
 	let hilo = await hiloController.createHilo(req.body);
 
+	res.status = hilo.status;
 	res.json(hilo);
 });
 
@@ -42,10 +45,11 @@ route.post('/crear', async (req, res) => {
 	segun los criterios de eliminación
 	?parametro=valor&otro=valor
 */
-route.get('/eliminar', async (req, res) => {
+route.post('/eliminar', async (req, res) => {
 	const hiloController = new HiloController(req);
-	let hilo = await hiloController.deleteHilo({eliminar: req.query});
+	let hilo = await hiloController.deleteHilo(req.body);
 
+	res.status = hilo.status;
 	res.json(hilo);
 });
 
@@ -58,6 +62,7 @@ route.post('/modificar', async (req, res) => {
 	const hiloController = new HiloController(req);
 	let hilo = await hiloController.updateHilo(req.body);
 
+	res.status = hilo.status;
 	res.json(hilo);
 });
 

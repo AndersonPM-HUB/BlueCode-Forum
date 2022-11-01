@@ -47,7 +47,7 @@ class HiloController {
 			return await DbOperation.createDocument(this.model, dataSchema);
 		}
 		
-		return alertaRes(origen, 'El hilo ya existe...');
+		return alertaRes(origen, 'El hilo ya existe...', 400);
 	}
 
 	/*
@@ -84,14 +84,14 @@ class HiloController {
 		}
 
 		if (operationDb === null) {
-			return alertaRes(origen, 'Los criterios de busqueda no son válidos...');
+			return alertaRes(origen, 'Los criterios de busqueda no son válidos...', 400);
 		}
 
 		return await operationDb(this.model, dataSchema);
 	}
 
 	/*
-		Elimina el hilo que se le envía por parametro
+		Elimina el hilo segun el tema que se envie como argumento
 
 		data: Objecto javascript
 
@@ -108,12 +108,11 @@ class HiloController {
 			return await DbOperation.deleteDocument(this.model, dataSchema);
 		}
 		
-		return alertaRes(origen, 'Ingrese un tema para eliminar...');
+		return alertaRes(origen, 'Ingrese un tema para eliminar...', 400);
 	}
 
 	/*
-		Actualiza un hilo segun lo que se le envia por
-		parametros
+		Actualiza un hilo segun lo que se le envia como argumentos
 
 		data: Objecto javascript
 
