@@ -9,7 +9,7 @@ import { HiloModel } from '../models/hilos.model.js';
 */
 class HiloController {
 	/*
-		Controlador de HiloController
+		Constructor de HiloController
 
 		req: recibe la request
 	*/

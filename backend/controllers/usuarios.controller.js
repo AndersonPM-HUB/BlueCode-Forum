@@ -10,7 +10,7 @@ import { UsuarioModel } from '../models/usuarios.model.js';
 */
 class UsuarioController {
 	/*
-		Controlador de UsuarioController
+		Constructor de UsuarioController
 
 		req: recibe la request
 	*/
@@ -115,6 +115,7 @@ class UsuarioController {
 		return Objecto javascript
 	*/
 	async ingresarUsuario(req, data) {
+		let response;
 		let origen = this.origen;
 		let dataSchema = {
 			origen,
@@ -132,12 +133,21 @@ class UsuarioController {
 		let contraseña_valida = await encrypt.compareData(data.contraseña, usuario.contraseña);		
 
 		if (contraseña_valida && (data.email === usuario.email)) {
-			dataSchema.buscar._id = usuario._id;
-			dataSchema.cambiar= {session: req.sessionID, activo: true};
-
 			req.session.usuario = usuario;
 
-			return await DbOperation.updateDocument(this.model, dataSchema);
+			dataSchema.buscar._id = usuario._id;
+			dataSchema.cambiar = {session: req.sessionID, activo: true};
+
+			response = await DbOperation.updateDocument(this.model, dataSchema);
+
+			usuario = await DbOperation.getOneDocument(this.model, dataSchema);
+
+			response.contenido = usuario.contenido; // Añadir a la respuesta el usuario
+			response.session_id = req.sessionID; // Añadir a la respuesta la sesion
+
+			response.mensaje = 'Has iniciado sesión...'; // Añadir a la respuesta un mensaje
+
+			return response;
 		}
 
 		return alertaRes(origen, 'Las credenciales son incorrectas...', 400);
@@ -151,7 +161,15 @@ class UsuarioController {
 	*/
 	async salirUsuario(req) {
 		let origen = this.origen;
+		let dataSchema = {
+			origen,
+		}
 		if (req.session.usuario){
+			dataSchema.buscar = {_id: req.session.usuario._id}
+			dataSchema.cambiar = {activo: false};
+			
+			req.session.cookie.maxAge = 0;
+			await DbOperation.updateDocument(this.model, dataSchema);
 			await req.session.destroy();
 
 			return alertaRes(origen, 'Has cerrado sesión...', 200);

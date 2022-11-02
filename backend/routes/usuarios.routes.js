@@ -10,7 +10,9 @@ const route = express.Router();
 */
 route.get('/', async (req, res) => {
 	const auth = new AuthHandler(req); // Handler para confirmar que el usuario este conectado
-	let respuesta = await auth.usuarioConectado(req, req.params, async (req, data) => {
+	const rol = parseInt(process.env.ADMIN); // Rol requerido para acceder al endpoint
+
+	let respuesta = await auth.usuarioConectado(req, req.params, rol, async (req, data) => {
 		const usuarioController = new UsuarioController(req);
 		return await usuarioController.getUsuarios(data);
 	});
@@ -59,10 +61,15 @@ route.post('/modificar', async (req, res) => {
 	si este se encuentra registrado, se envia el email y contraseña
 */
 route.post('/ingresar', async (req, res) => {
-	const usuarioController = new UsuarioController(req);
-	let usuario = await usuarioController.ingresarUsuario(req, req.body);
+	const auth = new AuthHandler(req); // Handler para confirmar que el usuario este conectado
+	const rol = parseInt(process.env.CORRIENTE); // Rol requerido para acceder al endpoint
 
-	res.status(usuario.status).json(usuario);
+	let respuesta = await auth.usuarioConectado(req, req.params, rol, async (req, data) => {
+		const usuarioController = new UsuarioController(req);
+		return await usuarioController.ingresarUsuario(req, req.body);
+	});
+	
+	res.status(respuesta.status).json(respuesta);
 });
 
 /*

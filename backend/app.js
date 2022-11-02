@@ -30,7 +30,7 @@ app.use(session({
 		sameSite: false,
 	},
 	saveUninitialized: true,
-	resave: false,
+	resave: true,
 	store: MongoStore.create({
 		mongoUrl: process.env.DB_URI,
 		touchAfter: 24 * 3600,
