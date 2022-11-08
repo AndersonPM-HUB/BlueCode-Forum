@@ -1,5 +1,6 @@
 import express from 'express';
 import { HiloController } from '../controllers/hilos.controller.js';
+import { AuthHandler } from '../handlers/auth.handler.js';
 
 const route = express.Router();
 
@@ -8,10 +9,14 @@ const route = express.Router();
 	existen en la base de datos
 */
 route.get('/', async (req, res) => {
-	const hiloController = new HiloController(req);
-	let hilo = await hiloController.getHilo(req.params);
+	const auth = new AuthHandler(req); // Handler para confirmar que el usuario este conectado
 
-	res.status(hilo.status).json(hilo);
+	let respuesta = await auth.usuarioNoRequerido(req, req.params, async (req, data) => {
+		const hiloController = new HiloController(req);
+		return await hiloController.getHilo(data);
+	});
+	
+	res.status(respuesta.status).json(respuesta);
 });
 
 /*
@@ -20,10 +25,15 @@ route.get('/', async (req, res) => {
 	?parametro=valor&otro=valor
 */
 route.get('/buscar', async (req, res) => {
-	const hiloController = new HiloController(req);
-	let hilo = await hiloController.getHilo({buscar: req.query});
+	const auth = new AuthHandler(req);
+	const busqueda = {buscar: req.query};
 
-	res.status(hilo.status).json(hilo);
+	let respuesta = await auth.usuarioNoRequerido(req, busqueda, async (req, data) => {
+		const hiloController = new HiloController(req);
+		return await hiloController.getHilo(data);
+	});
+	
+	res.status(respuesta.status).json(respuesta);
 });
 
 /*
@@ -31,10 +41,15 @@ route.get('/buscar', async (req, res) => {
 	segun los datos enviados por el body (POST) 
 */
 route.post('/crear', async (req, res) => {
-	const hiloController = new HiloController(req);
-	let hilo = await hiloController.createHilo(req.body);
+	const auth = new AuthHandler(req);
+	const rol = parseInt(process.env.MODERADOR);
 
-	res.status(hilo.status).json(hilo);
+	let respuesta = await auth.usuarioRequerido(req, req.body, rol, async (req, data) => {
+		const hiloController = new HiloController(req);
+		return await hiloController.createHilo(data);
+	});
+	
+	res.status(respuesta.status).json(respuesta);
 });
 
 /*
@@ -43,10 +58,15 @@ route.post('/crear', async (req, res) => {
 	?parametro=valor&otro=valor
 */
 route.post('/eliminar', async (req, res) => {
-	const hiloController = new HiloController(req);
-	let hilo = await hiloController.deleteHilo(req.body);
+	const auth = new AuthHandler(req);
+	const rol = parseInt(process.env.ADMIN);
 
-	res.status(hilo.status).json(hilo);
+	let respuesta = await auth.usuarioRequerido(req, req.body, rol, async (req, data) => {
+		const hiloController = new HiloController(req);
+		return await hiloController.deleteHilo(data);
+	});
+	
+	res.status(respuesta.status).json(respuesta);
 });
 
 /*
@@ -55,10 +75,15 @@ route.post('/eliminar', async (req, res) => {
 	de la peticion
 */
 route.post('/modificar', async (req, res) => {
-	const hiloController = new HiloController(req);
-	let hilo = await hiloController.updateHilo(req.body);
+	const auth = new AuthHandler(req);
+	const rol = parseInt(process.env.MODERADOR);
 
-	res.status(hilo.status).json(hilo);
+	let respuesta = await auth.usuarioRequerido(req, req.body, rol, async (req, data) => {
+		const hiloController = new HiloController(req);
+		return await hiloController.updateHilo(data);
+	});
+	
+	res.status(respuesta.status).json(respuesta);
 });
 
 export default route;

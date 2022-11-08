@@ -28,7 +28,7 @@ class AuthHandler{
 
 		return Objeto javascript con el formato de la respuesta
 	*/
-	async usuarioConectado(req, data, rol, operacion) {
+	async usuarioRequerido(req, data, rol, operacion) {
 		let usuario = req.session.usuario;
 		let response = getResFormat();
 		
@@ -48,21 +48,45 @@ class AuthHandler{
 		}
 
 		try{
-			if(usuario.rol !== rol && usuario.rol !== this.admin) {
+			if(usuario.rol <= rol && usuario.rol !== this.admin) {
 				response.contenido = 'No puedes acceder a este recurso...';
 
 				return response;
 			}	
 		} catch(error) {
-			response.error = error;
+			//TODO Revisar este error
+			console.log(error.message);
 		}
-		
-
-		response.status = 200;
 
 		return await operacion(req, data);
 	}
 	
+	/*
+		En caso que no se requiera una sesión para acceder
+		a ciertos recursos, utilizar este método de
+		autenticación
+
+		req: recibe la request
+		data: recibe los datos para la operacion
+		operacion: funcion callback que se quiere realizar
+
+		return Objeto javascript con el formato de la respuesta
+	*/
+	async usuarioNoRequerido(req, data, operacion){
+		let usuario = req.session.usuario;
+		let response = getResFormat();
+
+		response.origen = this.origen;
+		response.status = 400;
+
+		if (usuario && this.pagina_actual === '/usuarios/registrar') {
+			response.contenido = 'No puedes realizar esta acción, mientras tengas una cuenta iniciada...';
+
+			return response;
+		}
+
+		return await operacion(req, data);
+	}
 }
 
 export { AuthHandler }

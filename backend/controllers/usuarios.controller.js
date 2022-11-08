@@ -166,7 +166,7 @@ class UsuarioController {
 		}
 		if (req.session.usuario){
 			dataSchema.buscar = {_id: req.session.usuario._id}
-			dataSchema.cambiar = {activo: false};
+			dataSchema.cambiar = {activo: false, session: ''};
 			
 			req.session.cookie.maxAge = 0;
 			await DbOperation.updateDocument(this.model, dataSchema);
