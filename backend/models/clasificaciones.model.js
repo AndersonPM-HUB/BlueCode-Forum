@@ -2,14 +2,14 @@ import mongoose from 'mongoose';
 import { Schema } from 'mongoose';
 
 /*
-	Esquema/Modelo para la colección calificaciones de la base de datos
+	Esquema/Modelo para la colección clasificacion de la base de datos
 */
-const calificacionSchema = new mongoose.Schema({
+const ClasificacionSchema = new mongoose.Schema({
 	nombre: String,
 	descripcion: String,
-	id_publicaciones: [Schema.Types.ObjectId]
+	publicaciones: [Schema.Types.ObjectId]
 });
 
-const CalificacionModel = mongoose.model('Calificaciones', calificacionSchema);
+const ClasificacionModel = mongoose.model('Clasificaciones', ClasificacionSchema);
 
-export { CalificacionModel }
+export { ClasificacionModel }

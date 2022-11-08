@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 
 import hilosRoutes from './routes/hilos.routes.js';
 import usuariosRoutes from './routes/usuarios.routes.js';
+import clasificacionesRoutes from './routes/clasificaciones.routes.js';
 
 dotenv.config({ path: './.env.development.local', enconding: 'latin1' });
 
@@ -43,6 +44,7 @@ app.use(session({
 // Rutas de la aplicación
 app.use('/hilos', hilosRoutes);
 app.use('/usuarios', usuariosRoutes);
+app.use('/clasificaciones', clasificacionesRoutes);
 
 // test session
 app.get('/', async (req, res) => {
@@ -55,8 +57,8 @@ app.get('/', async (req, res) => {
 	// //TODO Regenerar session despues de un login
 	// //TODO Destruir session cuando se salga de la session
 	
-	// //console.log(req.cookies)
-	// //console.log('Signed Cookies: ', req.signedCookies)
+	//console.log(req.cookies)
+	//console.log('Signed Cookies: ', req.signedCookies)
 	// console.log(req.session.id);
 	// console.log(req.sessionID);
 	// let session_id = req.sessionID;
