@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 /*
-	Permite conocer el tiempo en formato año, meses, dias
+	Permite conocer el tiempo en formato dias
 	y horas, minutos y segundos
 */
 function getTime(){
@@ -9,7 +9,7 @@ function getTime(){
 	let days = time.format('YYYY-MM-DD')
 	let hours = time.format('HH:mm:ss')
 
-	return `[${days}]:[${hours}]`;
+	return `${days}T${hours}`;
 }
 
 export { getTime }

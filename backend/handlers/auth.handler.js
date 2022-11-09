@@ -48,7 +48,7 @@ class AuthHandler{
 		}
 
 		try{
-			if(usuario.rol <= rol && usuario.rol !== this.admin) {
+			if(usuario.rol < rol && usuario.rol !== this.admin) {
 				response.contenido = 'No puedes acceder a este recurso...';
 
 				return response;

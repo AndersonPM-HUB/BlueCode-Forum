@@ -10,6 +10,7 @@ import cookieParser from 'cookie-parser';
 import hilosRoutes from './routes/hilos.routes.js';
 import usuariosRoutes from './routes/usuarios.routes.js';
 import clasificacionesRoutes from './routes/clasificaciones.routes.js';
+import publicacionesRoutes from './routes/publicaciones.routes.js'
 
 dotenv.config({ path: './.env.development.local', enconding: 'latin1' });
 
@@ -45,6 +46,7 @@ app.use(session({
 app.use('/hilos', hilosRoutes);
 app.use('/usuarios', usuariosRoutes);
 app.use('/clasificaciones', clasificacionesRoutes);
+app.use('/publicaciones', publicacionesRoutes);
 
 // test session
 app.get('/', async (req, res) => {

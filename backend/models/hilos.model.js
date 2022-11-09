@@ -7,7 +7,7 @@ import { Schema } from 'mongoose';
 const hiloSchema = new mongoose.Schema({
 	tema: { type: String, default: 'None' },
 	descripcion: { type: String, default: 'None' },
-	publicaciones: [Schema.Types.ObjectId]
+	publicaciones: { type: [Schema.Types.ObjectId], ref: 'Publicaciones'}
 });
 
 const HiloModel = mongoose.model('Hilos', hiloSchema);

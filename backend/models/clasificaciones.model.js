@@ -7,7 +7,7 @@ import { Schema } from 'mongoose';
 const ClasificacionSchema = new mongoose.Schema({
 	nombre: String,
 	descripcion: String,
-	publicaciones: [Schema.Types.ObjectId]
+	publicaciones: { type: [Schema.Types.ObjectId], ref: 'Publicaciones'}
 });
 
 const ClasificacionModel = mongoose.model('Clasificaciones', ClasificacionSchema);

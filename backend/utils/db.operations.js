@@ -17,7 +17,13 @@ const db = process.env.DB_URI;
 */
 async function getDocuments(Model, datos) {
 	let response = await dbConnection(db, datos, async (data) => {
-		const documents = await Model.find();
+		
+		let documents = await Model.find();
+
+		if (data.poblar) {
+			documents = await Model.find().populate(data.poblar);
+		}
+		
 		logOperation(Model, 'getDocuments', data);
 
 		return {datos: documents, origen: data.origen}
@@ -37,7 +43,12 @@ async function getDocuments(Model, datos) {
 */
 async function getOneDocument(Model, datos) {
 	let response = await dbConnection(db, datos, async (data) => {
-		const documents = await Model.findOne(data.buscar);
+		let documents = await Model.findOne(data.buscar);
+
+		if (data.poblar) {
+			documents = await Model.findOne(data.buscar).populate(data.poblar);
+		}
+
 		logOperation(Model, 'getOneDocument', data);
 
 		return {datos: documents, origen: data.origen}
@@ -57,7 +68,12 @@ async function getOneDocument(Model, datos) {
 */
 async function getManyDocuments(Model, datos) {
 	let response = await dbConnection(db, datos, async (data) => {
-		const documents = await Model.find(data.buscar);
+		let documents = await Model.find(data.buscar);
+
+		if (data.poblar) {
+			documents = await Model.find(data.buscar).populate(data.poblar);
+		}
+
 		logOperation(Model, 'getManyDocuments', data);
 
 		return {datos: documents, origen: data.origen}

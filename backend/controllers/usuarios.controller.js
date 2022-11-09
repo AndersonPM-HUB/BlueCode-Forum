@@ -32,6 +32,8 @@ class UsuarioController {
 			origen,
 		}
 
+		dataSchema.poblar = 'publicaciones';
+
 		return await DbOperation.getDocuments(this.model, dataSchema);
 	}
 
