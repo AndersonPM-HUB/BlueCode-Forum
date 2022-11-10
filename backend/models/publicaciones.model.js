@@ -15,8 +15,8 @@ const publicacionSchema = new mongoose.Schema({
 		likes: Number,
 		dislikes: Number
 	},
-	comentarios: [Schema.Types.ObjectId],
-	clasificaciones: [Schema.Types.ObjectId]
+	comentarios: { type: [Schema.Types.ObjectId], ref: 'Comentarios' },
+	clasificaciones: { type: [Schema.Types.ObjectId], ref: 'Clasificaciones'}
 });
 
 const PublicacionModel = mongoose.model('Publicaciones', publicacionSchema);

@@ -1,4 +1,5 @@
 import { getResFormat } from '../utils/db.connection.js';
+import { RolHandler } from './rol.handler.js'
 
 /*
 	Clase AuthHandler que permite manejar las peticiones
@@ -29,6 +30,8 @@ class AuthHandler{
 		return Objeto javascript con el formato de la respuesta
 	*/
 	async usuarioRequerido(req, data, rol, operacion) {
+		const rolHandler = new RolHandler(req);
+
 		let usuario = req.session.usuario;
 		let response = getResFormat();
 		
@@ -47,18 +50,7 @@ class AuthHandler{
 			return response;
 		}
 
-		try{
-			if(usuario.rol < rol && usuario.rol !== this.admin) {
-				response.contenido = 'No puedes acceder a este recurso...';
-
-				return response;
-			}	
-		} catch(error) {
-			//TODO Revisar este error
-			console.log(error.message);
-		}
-
-		return await operacion(req, data);
+		return rolHandler.validarRol(req, data, usuario, rol, operacion);
 	}
 	
 	/*

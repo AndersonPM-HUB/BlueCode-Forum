@@ -3,6 +3,7 @@ import { alertaRes } from '../utils/db.connection.js';
 import { PublicacionModel } from '../models/publicaciones.model.js';
 import { getTime } from '../utils/moment.utils.js';
 import { UsuarioController } from './usuarios.controller.js';
+import { ClasificacionController } from './clasificaciones.controller.js';
 
 /*
 	Controlador de publicacion que contiene las operaciones
@@ -88,7 +89,9 @@ class PublicacionController {
 		}
 		let operationDb = null;
 
-        dataSchema.poblar = 'usuario';
+        dataSchema.poblar = [{ path: 'usuario', select: 'nickname puntos -_id' },
+			{ path: 'clasificaciones', select: 'nombre -_id' },
+			{ path: 'comentarios', select: 'contenido usuario fecha -_id', populate: { path: 'usuario', select: 'nickname -_id' } }];
 
 		if (!data.buscar) {
 			operationDb = DbOperation.getDocuments;
@@ -96,7 +99,7 @@ class PublicacionController {
 			return await operationDb(this.model, dataSchema);
 		}
 
-		if (data.buscar.titulo) {
+		if (data.buscar.titulo || data.buscar._id) {
 			dataSchema.buscar = data.buscar;
 			operationDb = DbOperation.getOneDocument;
 			
@@ -138,7 +141,7 @@ class PublicacionController {
         const publicacion = await this.getPublicacion(busqueda);
 
         if (publicacion.contenido !== 'Contenido no encontrado...') {
-            let eliminarPublicacion = {
+			let eliminarPublicacion = {
                 'buscar': {
                     '_id': publicacion.contenido.usuario._id
                 },
@@ -149,7 +152,7 @@ class PublicacionController {
                 }
             };
         
-            await usuarioController.updateUsuario(eliminarPublicacion);
+        	await usuarioController.updateUsuario(eliminarPublicacion);
         } 
 
 		if(data.eliminar.titulo) {
@@ -167,7 +170,7 @@ class PublicacionController {
 
 		return Objecto javascript
 	*/
-    async updatePublicacion(data) {
+    async updatePublicacion(req, data) {
 		let origen = this.origen;
 		let dataSchema = {
 			origen,

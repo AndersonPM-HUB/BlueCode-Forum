@@ -77,10 +77,10 @@ route.post('/eliminar', async (req, res) => {
 route.post('/modificar', async (req, res) => {
 	const auth = new AuthHandler(req);
 	const rol = parseInt(process.env.MODERADOR);
-    //TODO Revisar la modificacion de publicaciones
+
 	let respuesta = await auth.usuarioRequerido(req, req.body, rol, async (req, data) => {
 		const publicacionController = new PublicacionController(req);
-		return await publicacionController.updatePublicacion(data);
+		return await publicacionController.updatePublicacion(req, data);
 	});
 	
 	res.status(respuesta.status).json(respuesta);
