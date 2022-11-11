@@ -128,7 +128,7 @@ class UsuarioController {
 		
 		usuario = usuario.contenido;
 		
-		if (usuario === 'Contenido no encontrado...'){
+		if (usuario == 'Contenido no encontrado...'){
 			return alertaRes(origen, 'El usuario no se encuentra registrado...', 400);
 		}
 
