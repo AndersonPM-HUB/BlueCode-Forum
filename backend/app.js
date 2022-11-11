@@ -3,40 +3,55 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
-import { dbConnection } from './utils/db.connection.js';
-import { HiloModel } from './models/hilos.model.js';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
+import cookieParser from 'cookie-parser';
+
+import hilosRoutes from './routes/hilos.routes.js';
+import usuariosRoutes from './routes/usuarios.routes.js';
+import clasificacionesRoutes from './routes/clasificaciones.routes.js';
+import publicacionesRoutes from './routes/publicaciones.routes.js'
+import comentariosRoutes from './routes/comentarios.routes.js';
 
 dotenv.config({ path: './.env.development.local', enconding: 'latin1' });
 
+//Iniciando la aplicación
 const app = express();
 const port = process.env.PORT;
 
+//Middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
+app.use(cookieParser(process.env.SECRET_KEY));
+app.use(session({
+	secret: process.env.SECRET_KEY,
+	name: process.env.SESSION_NAME,
+	cookie: {
+		httpOnly: true,
+		maxAge: 24 * 60 * 60 * 1000,
+		secure: false,
+		sameSite: false,
+	},
+	saveUninitialized: true,
+	resave: true,
+	store: MongoStore.create({
+		mongoUrl: process.env.DB_URI,
+		touchAfter: 24 * 3600,
+		ttl: 14 * 24 * 60 * 60,
+		autoRemove: 'native',
+		autoRemoveInterval: 60 * 24
+	}),
+}));
 
-app.get('/', async (req, res) => {
-	let db = process.env.DB_URI;
-	let origen = req.protocol + "://" + req.get('host');
+// Rutas de la aplicación
+app.use('/hilos', hilosRoutes);
+app.use('/usuarios', usuariosRoutes);
+app.use('/clasificaciones', clasificacionesRoutes);
+app.use('/publicaciones', publicacionesRoutes);
+app.use('/comentarios', comentariosRoutes);
 
-	let crearHilo = await dbConnection(db, origen, async (data) => {
-		// const hilo = new HiloModel({
-		// 	tema: 'Programación',
-		// 	descripcion: 'Este es el apartado de programación',
-		// 	publicaciones: []
-		// });
-
-		// await hilo.save();
-
-		const eliminarHilo = await HiloModel.deleteOne({ tema: 'Programación'});
-		const encontrarHilo = await HiloModel.find();
-
-		return {datos: [...encontrarHilo], origen: data};
-	});
-
-	res.json(crearHilo);
-});
-
+// Inicio de la aplicación
 app.listen(port, () => {
 	console.log(`Listen on: ${port}`);
-	console.log(`App on localhost:${port}`);
+	console.log(`App on http://localhost:${port}`);
 });

@@ -10,9 +10,11 @@ const usuarioSchema = new mongoose.Schema({
 	apellidos: String,
 	contraseña: String,
 	email: String,
-	puntos: Number,
-	rol: Number,
-	activo: { type: Boolean, default: true }
+	puntos: { type: Number, default: 0 },
+	rol: { type: Number, default: 0 },
+	activo: { type: Boolean, default: false },
+	session: { type: String, default: '' },
+	publicaciones: { type: [Schema.Types.ObjectId], ref: 'Publicaciones' },
 });
 
 const UsuarioModel = mongoose.model('Usuarios', usuarioSchema);
