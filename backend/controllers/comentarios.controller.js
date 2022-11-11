@@ -20,7 +20,8 @@ class ComentarioController {
 	}
 
 	/*
-		Permite la creacion de comentarios
+		Permite la creacion de comentarios a publicaciones
+        existentes
 
 		data: Objecto javascript
 
