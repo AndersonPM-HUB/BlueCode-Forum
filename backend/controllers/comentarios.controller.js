@@ -47,7 +47,7 @@ class ComentarioController {
 
         let publicacionExiste = await publicacionController.getPublicacion(busqueda);
 
-        if (publicacionExiste !== 'Contenido no encontrado...'){
+        if (publicacionExiste != 'Contenido no encontrado...'){
             let comentarioCreado = await DbOperation.createDocument(this.model, dataSchema);
             
             let añadirComentario = {
