@@ -1,7 +1,6 @@
 import * as dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
 
 import session from 'express-session';
 import MongoStore from 'connect-mongo';

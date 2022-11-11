@@ -1,10 +1,9 @@
-import mongoose from 'mongoose';
-import { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 /*
 	Esquema/Modelo para la colección publicaciones de la base de datos
 */
-const publicacionSchema = new mongoose.Schema({
+const publicacionSchema = new Schema({
 	titulo: String,
 	contenido: String,
 	imagen: String,
@@ -19,6 +18,6 @@ const publicacionSchema = new mongoose.Schema({
 	clasificaciones: { type: [Schema.Types.ObjectId], ref: 'Clasificaciones'}
 });
 
-const PublicacionModel = mongoose.model('Publicaciones', publicacionSchema);
+const PublicacionModel = model('Publicaciones', publicacionSchema);
 
 export { PublicacionModel }

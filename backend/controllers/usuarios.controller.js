@@ -1,6 +1,5 @@
 import * as DbOperation from '../utils/db.operations.js';
 import * as encrypt from '../utils/encrypt.utils.js';
-import { getResFormat } from '../utils/db.connection.js';
 import { alertaRes } from '../utils/db.connection.js';
 import { UsuarioModel } from '../models/usuarios.model.js';
 
