@@ -29,11 +29,33 @@ class UsuarioController {
 		let origen = this.origen;
 		let dataSchema = {
 			origen,
+			pagina: 1
 		}
 
-		dataSchema.poblar = 'publicaciones';
+		let operationDb = null;
 
-		return await DbOperation.getDocuments(this.model, dataSchema);
+		dataSchema.poblar = [{ path: 'publicaciones', select: 'titulo fecha usuario -_id', populate : { path: 'usuario', select: 'nickname puntos -_id' } }];
+
+		if (!data.buscar) {
+			operationDb = DbOperation.getDocuments;
+
+			return await operationDb(this.model, dataSchema);
+		}
+
+		if (data.buscar.pagina || data.buscar.nombre || data.buscar.nickname || data.buscar._id){
+			dataSchema.buscar = data.buscar;
+			
+			operationDb = DbOperation.getOneDocument;
+			
+			if (data.buscar.todos === "true"){
+				dataSchema.pagina = data.buscar.pagina ?? 1;
+				
+				operationDb = DbOperation.getManyDocuments;
+				delete data.buscar.todos;
+			}
+		}
+
+		return await operationDb(this.model, dataSchema);
 	}
 
 	/*
@@ -125,8 +147,8 @@ class UsuarioController {
 
 		let usuario = await DbOperation.getOneDocument(this.model, dataSchema);
 		
-		usuario = usuario.contenido;
-		
+		usuario = usuario.contenido.docs[0];
+
 		if (usuario == 'Contenido no encontrado...'){
 			return alertaRes(origen, 'El usuario no se encuentra registrado...', 400);
 		}

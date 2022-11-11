@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
 /*
 	Esquema/Modelo para la colección publicaciones de la base de datos
@@ -17,6 +18,8 @@ const publicacionSchema = new Schema({
 	comentarios: { type: [Schema.Types.ObjectId], ref: 'Comentarios' },
 	clasificaciones: { type: [Schema.Types.ObjectId], ref: 'Clasificaciones'}
 });
+
+publicacionSchema.plugin(paginate);
 
 const PublicacionModel = model('Publicaciones', publicacionSchema);
 

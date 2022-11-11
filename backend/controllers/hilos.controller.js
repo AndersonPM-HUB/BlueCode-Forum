@@ -62,7 +62,9 @@ class HiloController {
 		let origen = this.origen;
 		let dataSchema = {
 			origen,
+			pagina: 1
 		}
+
 		let operationDb = null;
 
 		if (!data.buscar) {
@@ -71,11 +73,16 @@ class HiloController {
 			return await operationDb(this.model, dataSchema);
 		}
 
-		if (data.buscar.tema) {
+		dataSchema.poblar = [{ path: 'publicaciones' }]
+
+		if (data.buscar.tema || data.buscar.pagina) {
 			dataSchema.buscar = data.buscar;
+			
 			operationDb = DbOperation.getOneDocument;
 			
 			if (data.buscar.todos === "true"){
+				dataSchema.pagina = data.buscar.pagina ?? 1;
+
 				operationDb = DbOperation.getManyDocuments;
 				delete data.buscar.todos;
 			}

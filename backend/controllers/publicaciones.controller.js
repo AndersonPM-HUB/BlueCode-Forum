@@ -85,7 +85,9 @@ class PublicacionController {
 		let origen = this.origen;
 		let dataSchema = {
 			origen,
+			pagina: 1
 		}
+		
 		let operationDb = null;
 
         dataSchema.poblar = [{ path: 'usuario', select: 'nickname puntos -_id' },
@@ -98,11 +100,14 @@ class PublicacionController {
 			return await operationDb(this.model, dataSchema);
 		}
 
-		if (data.buscar.titulo || data.buscar._id) {
+		if (data.buscar.titulo || data.buscar._id || data.buscar.pagina) {
 			dataSchema.buscar = data.buscar;
+			
 			operationDb = DbOperation.getOneDocument;
 			
 			if (data.buscar.todos === "true"){
+				dataSchema.pagina = data.buscar.pagina ?? 1;
+				
 				operationDb = DbOperation.getManyDocuments;
 				delete data.buscar.todos;
 			}

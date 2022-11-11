@@ -17,12 +17,25 @@ const db = process.env.DB_URI;
 */
 async function getDocuments(Model, datos) {
 	let response = await dbConnection(db, datos, async (data) => {
-		
-		let documents = await Model.find();
+		let options = {
+			limit: 10,
+			page: datos.pagina
+		}
 
 		if (data.poblar) {
-			documents = await Model.find().populate(data.poblar);
+			options.populate = data.poblar;
 		}
+
+		const documents = await Model.paginate({}, options, (err, res) => {
+			let datosPaginados = {
+				docs: res.docs,
+				pagina: res.page,
+				limite: res.limit,
+				total_paginas: res.totalPages
+			}
+
+			return datosPaginados;
+		});
 		
 		logOperation(Model, 'getDocuments', data);
 
@@ -43,11 +56,29 @@ async function getDocuments(Model, datos) {
 */
 async function getOneDocument(Model, datos) {
 	let response = await dbConnection(db, datos, async (data) => {
-		let documents = await Model.findOne(data.buscar);
+		let options = {
+			limit: 1,
+			page: 1
+		}
 
 		if (data.poblar) {
-			documents = await Model.findOne(data.buscar).populate(data.poblar);
+			options.populate = data.poblar;
 		}
+
+		if (data.buscar.pagina){
+			delete data.buscar.pagina;
+		}
+		
+		const documents = await Model.paginate(data.buscar, options, (err, res) => {
+			let datosPaginados = {
+				docs: res.docs,
+				pagina: res.page,
+				limite: res.limit,
+				total_paginas: res.totalPages
+			}
+
+			return datosPaginados;
+		});
 
 		logOperation(Model, 'getOneDocument', data);
 
@@ -68,11 +99,29 @@ async function getOneDocument(Model, datos) {
 */
 async function getManyDocuments(Model, datos) {
 	let response = await dbConnection(db, datos, async (data) => {
-		let documents = await Model.find(data.buscar);
+		let options = {
+			limit: 10,
+			page: datos.pagina
+		}
 
 		if (data.poblar) {
-			documents = await Model.find(data.buscar).populate(data.poblar);
+			options.populate = data.poblar;
 		}
+
+		if (data.buscar.pagina){
+			delete data.buscar.pagina;
+		}
+		
+		const documents = await Model.paginate(data.buscar, options, (err, res) => {
+			let datosPaginados = {
+				docs: res.docs,
+				pagina: res.page,
+				limite: res.limit,
+				total_paginas: res.totalPages
+			}
+
+			return datosPaginados;
+		});
 
 		logOperation(Model, 'getManyDocuments', data);
 
