@@ -1,10 +1,9 @@
-import mongoose from 'mongoose';
-import { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 /*
 	Esquema/Modelo para la colección usuarios de la base de datos
 */
-const usuarioSchema = new mongoose.Schema({
+const usuarioSchema = new Schema({
 	nickname: String,
 	nombres: String,
 	apellidos: String,
@@ -17,6 +16,6 @@ const usuarioSchema = new mongoose.Schema({
 	publicaciones: { type: [Schema.Types.ObjectId], ref: 'Publicaciones' },
 });
 
-const UsuarioModel = mongoose.model('Usuarios', usuarioSchema);
+const UsuarioModel = model('Usuarios', usuarioSchema);
 
 export { UsuarioModel }

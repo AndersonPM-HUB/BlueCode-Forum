@@ -3,7 +3,6 @@ import { alertaRes } from '../utils/db.connection.js';
 import { PublicacionModel } from '../models/publicaciones.model.js';
 import { getTime } from '../utils/moment.utils.js';
 import { UsuarioController } from './usuarios.controller.js';
-import { ClasificacionController } from './clasificaciones.controller.js';
 
 /*
 	Controlador de publicacion que contiene las operaciones
