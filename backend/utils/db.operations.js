@@ -6,6 +6,39 @@ dotenv.config({ path: './.env.development.local', enconding: 'latin1' });
 const db = process.env.DB_URI;
 
 /*
+	Realiza comprobaciones y crea la paginacion
+	de los documentos	
+
+	Model: Mongoose schema
+	datos: Objeto javascript
+	options: Objeto javascript
+
+	return Objeto javascript
+
+*/
+async function usePagination(Model, data, options) {
+	if (data.poblar) {
+		options.populate = data.poblar;
+	}
+
+	if (data.buscar.pagina){
+		delete data.buscar.pagina;
+	}
+	
+	const documents = await Model.paginate(data.buscar, options, (err, res) => {
+		let datosPaginados = {
+			docs: res.docs,
+			pagina: res.page,
+			limite: res.limit,
+			total_paginas: res.totalPages
+		}
+
+		return datosPaginados;
+	});
+
+	return documents;
+}
+/*
 	Trae todos los documentos del modelo
 	que se requiera
 
@@ -61,24 +94,7 @@ async function getOneDocument(Model, datos) {
 			page: 1
 		}
 
-		if (data.poblar) {
-			options.populate = data.poblar;
-		}
-
-		if (data.buscar.pagina){
-			delete data.buscar.pagina;
-		}
-		
-		const documents = await Model.paginate(data.buscar, options, (err, res) => {
-			let datosPaginados = {
-				docs: res.docs,
-				pagina: res.page,
-				limite: res.limit,
-				total_paginas: res.totalPages
-			}
-
-			return datosPaginados;
-		});
+		let documents = usePagination(Model, data, options)
 
 		logOperation(Model, 'getOneDocument', data);
 
@@ -104,24 +120,7 @@ async function getManyDocuments(Model, datos) {
 			page: datos.pagina
 		}
 
-		if (data.poblar) {
-			options.populate = data.poblar;
-		}
-
-		if (data.buscar.pagina){
-			delete data.buscar.pagina;
-		}
-		
-		const documents = await Model.paginate(data.buscar, options, (err, res) => {
-			let datosPaginados = {
-				docs: res.docs,
-				pagina: res.page,
-				limite: res.limit,
-				total_paginas: res.totalPages
-			}
-
-			return datosPaginados;
-		});
+		let documents = usePagination(Model, data, options)
 
 		logOperation(Model, 'getManyDocuments', data);
 
