@@ -49,6 +49,10 @@ app.use('/clasificaciones', clasificacionesRoutes);
 app.use('/publicaciones', publicacionesRoutes);
 app.use('/comentarios', comentariosRoutes);
 
+app.get('*', function(req, res){
+	res.status(404).json({warn: 'Not content found...'})
+});
+
 // Inicio de la aplicación
 app.listen(port, () => {
 	console.log(`Listen on: ${port}`);
