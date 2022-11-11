@@ -80,12 +80,28 @@ class ComentarioController {
 		let origen = this.origen;
 		let dataSchema = {
 			origen,
+			pagina: 1
 		}
 
-        dataSchema.poblar = [{ path: 'usuario', select: 'nickname puntos -_id' },
+		let operationDb;
+
+		dataSchema.poblar = [{ path: 'usuario', select: 'nickname puntos -_id' },
 			{ path: 'publicacion', select: 'titulo -_id' }];
 
-		return await DbOperation.getDocuments(this.model, dataSchema);
+		if (!data.buscar) {
+			operationDb = DbOperation.getDocuments;
+
+			return await operationDb(this.model, dataSchema);
+		}
+
+		if (data.buscar.pagina) {
+			dataSchema.buscar = data.buscar;
+			dataSchema.pagina = data.buscar.pagina ?? 1;
+			
+			operationDb = DbOperation.getManyDocuments;
+		}
+
+		return await operationDb(this.model, dataSchema);
 	}
 
 	/*

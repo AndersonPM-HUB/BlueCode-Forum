@@ -32,12 +32,16 @@ class RolHandler {
 
 		response.origen = this.origen;
 		response.status = 400;
-
-		if(usuario.rol < rol && usuario.rol !== this.admin) {
-			response.contenido = 'No puedes acceder a este recurso...';
-
-			return response;
-		}	
+		
+		try {
+			if(usuario.rol < rol && usuario.rol !== this.admin) {
+				response.contenido = 'No puedes acceder a este recurso...';
+	
+				return response;
+			}
+		} catch (err) {
+			//TODO Controlar error ingreso de sesion
+		}
 
         return await operacion(req, data);
     }

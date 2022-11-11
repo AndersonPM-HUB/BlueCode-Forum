@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
 /*
 	Esquema/Modelo para la colección usuarios de la base de datos
@@ -15,6 +16,8 @@ const usuarioSchema = new Schema({
 	session: { type: String, default: '' },
 	publicaciones: { type: [Schema.Types.ObjectId], ref: 'Publicaciones' },
 });
+
+usuarioSchema.plugin(paginate);
 
 const UsuarioModel = model('Usuarios', usuarioSchema);
 

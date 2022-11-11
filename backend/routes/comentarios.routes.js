@@ -20,6 +20,22 @@ route.get('/', async (req, res) => {
 });
 
 /*
+	Endpoint que permite buscar y paginar los comentarios
+	?parametro=valor&otro=valor
+*/
+route.get('/buscar', async (req, res) => {
+	const auth = new AuthHandler(req);
+	const busqueda = {buscar: req.query};
+
+	let respuesta = await auth.usuarioNoRequerido(req, busqueda, async (req, data) => {
+		const comentarioController = new ComentarioController(req);
+		return await comentarioController.getComentario(data);
+	});
+	
+	res.status(respuesta.status).json(respuesta);
+});
+
+/*
 	Endpoint que permite crear un comentario
 	segun los datos enviados por el body (POST) 
 */
