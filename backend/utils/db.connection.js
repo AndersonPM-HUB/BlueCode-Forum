@@ -29,9 +29,20 @@ async function dbConnection(db_uri, data, db_operacion) {
 		datos_recibidos = await db_operacion(data);
 		response.origen = datos_recibidos.origen;
 
-		response.contenido = datos_recibidos.datos ?? 'Contenido no encontrado...';
-		response.total = response.contenido != 'Contenido no encontrado...' ? 
-							response.contenido.length : response.total;
+		response.contenido = datos_recibidos.datos;
+		
+		try {
+			if (response.contenido.docs.length === 0) {
+				response.contenido = 'Contenido no encontrado...'
+			} 
+		} catch(error) {
+			response.total = response.contenido.length;
+		}
+		
+
+		if (response.contenido.docs) {
+			response.total = response.contenido.docs.length;
+		}
 							
 	} catch(error) {
 		response.contenido = 'Algo salio mal...';

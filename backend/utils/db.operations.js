@@ -24,7 +24,7 @@ async function usePagination(Model, data, options) {
 	if (data.buscar.pagina){
 		delete data.buscar.pagina;
 	}
-	
+
 	const documents = await Model.paginate(data.buscar, options, (err, res) => {
 		let datosPaginados = {
 			docs: res.docs,
@@ -94,7 +94,7 @@ async function getOneDocument(Model, datos) {
 			page: 1
 		}
 
-		let documents = usePagination(Model, data, options)
+		let documents = await usePagination(Model, data, options)
 
 		logOperation(Model, 'getOneDocument', data);
 
@@ -120,7 +120,7 @@ async function getManyDocuments(Model, datos) {
 			page: datos.pagina
 		}
 
-		let documents = usePagination(Model, data, options)
+		let documents = await usePagination(Model, data, options);
 
 		logOperation(Model, 'getManyDocuments', data);
 

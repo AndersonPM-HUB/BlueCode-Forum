@@ -47,12 +47,12 @@ class ComentarioController {
 
         let publicacionExiste = await publicacionController.getPublicacion(busqueda);
 
-        if (publicacionExiste != 'Contenido no encontrado...'){
+        if (publicacionExiste.contenido != 'Contenido no encontrado...'){
             let comentarioCreado = await DbOperation.createDocument(this.model, dataSchema);
             
             let añadirComentario = {
                 'buscar': {
-                    '_id': publicacionExiste.contenido._id
+                    '_id': publicacionExiste.contenido.docs[0]._id
                 },
                 'cambiar': {
                     $addToSet: {
@@ -61,7 +61,7 @@ class ComentarioController {
                 }
             };
 
-            publicacionController.updatePublicacion(req, añadirComentario);
+            await publicacionController.updatePublicacion(req, añadirComentario);
 
             return comentarioCreado;
         }
