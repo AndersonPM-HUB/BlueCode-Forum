@@ -40,7 +40,7 @@ class ClasificacionController {
 		}
 
 		let documentExist = await DbOperation.getOneDocument(this.model, consulta);
-
+		
 		if(documentExist.contenido === 'Contenido no encontrado...'){
 			dataSchema.crear = data;
 			return await DbOperation.createDocument(this.model, dataSchema);

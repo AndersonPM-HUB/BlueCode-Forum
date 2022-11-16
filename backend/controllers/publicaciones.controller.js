@@ -52,7 +52,7 @@ class PublicacionController {
             dataSchema.crear.fecha = getTime();
         
 			const publicacionCreada = await DbOperation.createDocument(this.model, dataSchema);
-
+			
 			let busqueda = {
 				'buscar': {
 					'nickname': req.session.usuario.nickname,
@@ -147,7 +147,7 @@ class PublicacionController {
         if (publicacion.contenido !== 'Contenido no encontrado...') {
 			let eliminarPublicacion = {
                 'buscar': {
-                    '_id': publicacion.contenido.usuario._id
+                    '_id': publicacion.contenido.docs[0].usuario._id
                 },
                 'cambiar': {
                     $pull: {
@@ -161,6 +161,7 @@ class PublicacionController {
 
 		if(data.eliminar.titulo) {
 			dataSchema.eliminar = data.eliminar;
+			
 			return await DbOperation.deleteDocument(this.model, dataSchema);
 		}
 		
