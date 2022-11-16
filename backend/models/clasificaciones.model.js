@@ -1,15 +1,17 @@
-import mongoose from 'mongoose';
-import { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
 /*
-	Esquema/Modelo para la colección calificaciones de la base de datos
+	Esquema/Modelo para la colección clasificacion de la base de datos
 */
-const calificacionSchema = new mongoose.Schema({
+const clasificacionSchema = new Schema({
 	nombre: String,
 	descripcion: String,
-	id_publicaciones: [Schema.Types.ObjectId]
+	publicaciones: { type: [Schema.Types.ObjectId], ref: 'Publicaciones'}
 });
 
-const CalificacionModel = mongoose.model('Calificaciones', calificacionSchema);
+clasificacionSchema.plugin(paginate);
 
-export { CalificacionModel }
+const ClasificacionModel = model('Clasificaciones', clasificacionSchema);
+
+export { ClasificacionModel }

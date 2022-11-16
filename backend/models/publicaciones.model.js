@@ -1,24 +1,26 @@
-import mongoose from 'mongoose';
-import { Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
 /*
 	Esquema/Modelo para la colección publicaciones de la base de datos
 */
-const publicacionSchema = new mongoose.Schema({
+const publicacionSchema = new Schema({
 	titulo: String,
 	contenido: String,
 	imagen: String,
-	id_usuario: Schema.Types.ObjectId,
+	usuario: { type: Schema.Types.ObjectId, ref: 'Usuarios' } ,
 	fecha: Date,
 	activa: { type: Boolean, default: true },
 	interacciones: {
 		likes: Number,
 		dislikes: Number
 	},
-	id_comentarios: [Schema.Types.ObjectId],
-	id_clasificaciones: [Schema.Types.ObjectId]
+	comentarios: { type: [Schema.Types.ObjectId], ref: 'Comentarios' },
+	clasificaciones: { type: [Schema.Types.ObjectId], ref: 'Clasificaciones'}
 });
 
-const PublicacionModel = mongoose.model('Publicaciones', publicacionSchema);
+publicacionSchema.plugin(paginate);
+
+const PublicacionModel = model('Publicaciones', publicacionSchema);
 
 export { PublicacionModel }
