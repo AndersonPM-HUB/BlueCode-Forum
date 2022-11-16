@@ -1,0 +1,27 @@
+#contenido {
+  margin: 0px;
+}
+
+img {
+  width: 100%;
+}
+
+#contenido{
+
+    font-family: 'Montserrat Alternates';
+}
+
+form {
+  width: 60%;
+  height: 50%;
+  margin: 15% 40% 0 40%;
+  text-align: left;
+}
+
+a{
+    margin-bottom: 10px;
+}
+
+button{
+    margin:0; 
+}

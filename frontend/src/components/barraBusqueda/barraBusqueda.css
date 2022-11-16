@@ -1,0 +1,11 @@
+.busqueda-input{
+    border-radius: 10px;
+    width: 269px;
+    height: 38px;
+    background-color: #D9D9D9;
+    text-align: center;
+    background-image: url(../../media/lupa.png);
+    background-repeat: no-repeat;
+    background-position:right;
+    padding: 10px; 
+}

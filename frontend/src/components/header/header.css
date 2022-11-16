@@ -1,0 +1,18 @@
+.navegation-body {
+  height: 20vh;
+  font-family: "Montserrat Alternates";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  color: #7a7a77;
+}
+
+.items-nav {
+  justify-content: end;
+  margin-top: 10%;
+}
+
+.user-seccion{
+  margin-left: 30px; ;
+}

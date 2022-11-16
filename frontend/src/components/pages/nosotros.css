@@ -1,0 +1,33 @@
+p {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 20px;
+  color: #000000;
+}
+#titulo1 {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 22px;
+  color: #067da4;
+}
+
+#titulo2 {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 22px;
+  color: #ffdb06;
+}
+
+#contenedor {
+  margin-top: 20px;
+}
+
+#contenido-nosotros {
+  margin-top: 10px;
+}
