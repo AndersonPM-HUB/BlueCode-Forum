@@ -2,7 +2,8 @@ import React from "react";
 import { Container, Col, Row } from "react-bootstrap";
 import "./nosotros.css";
 import Carrusel from "../carrusel/carrusel";
-
+import footer from "../../media/footer.png";
+import Imagenes from "../imagenes/imagenes";
 export default function Nosotros() {
   return (
     <Container id="contenedor">
@@ -62,6 +63,7 @@ export default function Nosotros() {
           </p>
         </Col>
       </Row>
+      <Imagenes imagen={footer} text={"Footer"} />
     </Container>
   );
 }
