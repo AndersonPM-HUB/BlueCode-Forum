@@ -56,5 +56,5 @@ app.get('*', function(req, res){
 // Inicio de la aplicación
 app.listen(port, () => {
 	console.log(`Listen on: ${port}`);
-	console.log(`App on http://localhost:${port}`);
+	console.log('Welcome to BlueCode backend :)!')
 });
