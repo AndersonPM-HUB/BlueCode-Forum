@@ -144,10 +144,13 @@ class UsuarioController {
 			origen,
 			buscar: {email: data.email}
 		}
-
-		let usuario = await DbOperation.getOneDocument(this.model, dataSchema);
 		
-		usuario = usuario.contenido.docs[0];
+		try{
+			let usuario = await DbOperation.getOneDocument(this.model, dataSchema);
+			usuario = usuario.contenido.docs[0];
+		}catch(error){
+			usuario = 'Contenido no encontrado...';
+		}
 
 		if (usuario == 'Contenido no encontrado...'){
 			return alertaRes(origen, 'El usuario no se encuentra registrado...', 400);
